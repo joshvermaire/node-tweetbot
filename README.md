@@ -40,10 +40,10 @@ While I understand that Tweetbot is in an alpha stage, this repo will be maintai
 
 ## Todo
 
-Make this into a command line app.
+Make this into a command line app:
 
-Items for consideration:
-Time between checking for tweets (default 10s)
-Time between showing growl notifications (default 1s)
-Ask for username (default in config file)
-Support for Mountain Lion Notification Center
+*   Items for consideration:
+*   Time between checking for tweets (default 10s)
+*   Time between showing growl notifications (default 1s)
+*   Ask for username (default in config file)
+*   Support for Mountain Lion Notification Center

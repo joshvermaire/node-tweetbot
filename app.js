@@ -74,15 +74,17 @@ growlTweet = function() {
   console.log(length);
   if (length) {
     tweet = tweetList.splice(length - 1, 1)[0];
-    if (tweet.id !== lastShownId) {
+    if (tweet.id > lastShownId) {
       lastShownId = tweet.id;
       title = tweet.user.screen_name;
       growl(tweet.text, {
         title: title,
         image: "Tweetbot"
       });
+      growlTimeout = setTimeout(growlTweet, TIMEOUT);
+    } else {
+      growlTweet();
     }
-    return growlTimeout = setTimeout(growlTweet, TIMEOUT);
   } else {
     return growlTimeout = false;
   }

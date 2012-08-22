@@ -29,8 +29,9 @@ While I understand that Tweetbot is in an alpha stage, this repo will be maintai
       username: 'yourtwitterusername'
     }
 
-  Start the app:
+  Install dependencies and start the app:
 
+    npm install -d
     node app
 
   You're set.
@@ -43,4 +44,5 @@ Items for consideration:
   Time between checking for tweets (default 10s)
   Time between showing growl notifications (default 1s)
   Ask for username (default in config file)
+  Support for Mountain Lion Notification Center
 

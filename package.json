@@ -1,0 +1,31 @@
+{
+  "name": "node-tweetbot",
+  "preferGlobal": "true",
+  "version": "0.0.1",
+  "author": "Josh Vermaire <joshvermaire@gmail.com>",
+  "description": "Supplimentary growl support for Tweetbot Alpha",
+  "contributors": [
+    {
+      "name": "Josh Vermaire",
+      "email": "joshvermaire@gmail.com"
+    }
+  ],
+  "bin": {
+    "node-tweetbot": "./bin/node-tweetbot"
+  },
+  "main": "./lib/http-server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joshvermaire/node-tweetbot.git"
+  },
+  "dependencies" : {
+    "growl"   :  "*",
+    "ntwitter" : "*"
+  },
+  "bundleDependencies": [
+  ],
+  "license": "MIT",
+  "engine": {
+    "node": ">=0.4"
+  }
+}

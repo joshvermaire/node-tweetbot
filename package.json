@@ -19,8 +19,8 @@
     "url": "https://github.com/joshvermaire/node-tweetbot.git"
   },
   "dependencies" : {
-    "growl"   :  "*",
-    "ntwitter" : "*"
+    "growl"   :  "1.5.1",
+    "ntwitter" : "0.4.1"
   },
   "bundleDependencies": [
   ],

@@ -43,7 +43,7 @@ feedCallback = firstTime = function(err, data) {
   var lastTweet;
   lastTweet = data[0];
   if (lastTweet) {
-    sinceId = lastTweet.id;
+    sinceId = lastShownId = lastTweet.id;
     count = 20;
     feedCallback = recurringCallback;
   }
@@ -58,7 +58,6 @@ getFeed = function() {
   if (sinceId) {
     obj.since_id = sinceId + 1;
   }
-  console.log(sinceId);
   return twitter.getHomeTimeline(obj, feedCallback);
 };
 
@@ -71,20 +70,21 @@ showFeed = function() {
 growlTweet = function() {
   var length, title, tweet;
   length = tweetList.length;
-  console.log(length);
   if (length) {
     tweet = tweetList.splice(length - 1, 1)[0];
     if (tweet.id > lastShownId) {
+      console.log('tweet');
       lastShownId = tweet.id;
       title = tweet.user.screen_name;
       growl(tweet.text, {
         title: title,
         image: "Tweetbot"
       });
-      growlTimeout = setTimeout(growlTweet, TIMEOUT);
-    } else {
-      growlTweet();
+      // growlTimeout = setTimeout(growlTweet, TIMEOUT);
+    // } else {
+    //   growlTweet();
     }
+    growlTweet();
   } else {
     return growlTimeout = false;
   }
@@ -93,3 +93,5 @@ growlTweet = function() {
 twitter.verifyCredentials(function(err, data) {
   return getFeed();
 });
+
+console.log('Im going to wait for tweets...')

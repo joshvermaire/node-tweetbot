@@ -1,15 +1,13 @@
-var TIMEOUT, TWEET_INTERVAL, Twitter, config, count, feedCallback, firstTime, getFeed, growl, growlTimeout, growlTweet, recurringCallback, showFeed, sinceId, tweetList, tweetTimeout, twitter;
+var TIMEOUT, TWEET_INTERVAL, Twitter, config, count, feedCallback, firstTime, getFeed, growl, growlTimeout, growlTweet, recurringCallback, showFeed, sinceId, tweetList, twitter, lastShownId, updateTweetList;
 
 TWEET_INTERVAL = 10000;
 TIMEOUT = 1000;
 growl = require("growl");
 Twitter = require("ntwitter");
 config = require("./config");
-sinceId = void 0;
-count = 3;
+count = 1;
 tweetList = [];
 growlTimeout = false;
-tweetTimeout = false;
 
 twitter = new Twitter({
   consumer_key: config.key,
@@ -18,33 +16,38 @@ twitter = new Twitter({
   access_token_secret: config.tokenSecret
 });
 
+updateTweetList = function(tweets) {
+  var i;
+  i = tweets.length - 1;
+  while (i >= 0) {
+    tweetList.push(tweets[i]);
+    i--;
+  }
+}
+
 recurringCallback = function(err, data) {
-  var i, lastTweet;
+  var lastTweet;
   if (err) {
     throw err;
   }
-  i = data.length - 1;
   lastTweet = data[0];
-  while (i >= 0) {
-    tweetList.push(data[i]);
-    i--;
-  }
   if (lastTweet) {
-    sinceId = lastTweet.id + 1;
+    sinceId = lastTweet.id;
   }
-  tweetTimeout = setTimeout(getFeed, TWEET_INTERVAL);
-  return showFeed();
+  updateTweetList(data);
+  showFeed();
+  return setTimeout(getFeed, TWEET_INTERVAL);
 };
 
 feedCallback = firstTime = function(err, data) {
   var lastTweet;
   lastTweet = data[0];
   if (lastTweet) {
-    sinceId = lastTweet.id + 1;
+    sinceId = lastTweet.id;
     count = 20;
     feedCallback = recurringCallback;
   }
-  return tweetTimeout = setTimeout(getFeed, TWEET_INTERVAL);
+  return setTimeout(getFeed, TWEET_INTERVAL);
 };
 
 getFeed = function() {
@@ -53,8 +56,9 @@ getFeed = function() {
     count: count
   };
   if (sinceId) {
-    obj.since_id = sinceId;
+    obj.since_id = sinceId + 1;
   }
+  console.log(sinceId);
   return twitter.getHomeTimeline(obj, feedCallback);
 };
 
@@ -67,13 +71,17 @@ showFeed = function() {
 growlTweet = function() {
   var length, title, tweet;
   length = tweetList.length;
+  console.log(length);
   if (length) {
     tweet = tweetList.splice(length - 1, 1)[0];
-    title = tweet.user.screen_name;
-    growl(tweet.text, {
-      title: title,
-      image: "Tweetbot"
-    });
+    if (tweet.id !== lastShownId) {
+      lastShownId = tweet.id;
+      title = tweet.user.screen_name;
+      growl(tweet.text, {
+        title: title,
+        image: "Tweetbot"
+      });
+    }
     return growlTimeout = setTimeout(growlTweet, TIMEOUT);
   } else {
     return growlTimeout = false;

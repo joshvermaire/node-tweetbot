@@ -59,7 +59,7 @@ getAvatar = function (tweet)
 {
   var crypto = require('crypto');
   var hash = crypto.createHash('md5').update(tweet.user.profile_image_url).digest("hex");
-  var filename= "/Applications/tweetbot/temp/"+hash+".png";
+  var filename= __dirname+"/temp/"+hash+".png";
 
   fs.exists(filename, function(exists) {
     if (exists) {
@@ -67,7 +67,7 @@ getAvatar = function (tweet)
       growlTweet(tweet,filename);
 
     } else {
-      //avatar exist .. go growl
+      //avatar doesn't exist .. download then Growl
 
       var request = http.get(tweet.user.profile_image_url, function(res){
           var imagedata = ''

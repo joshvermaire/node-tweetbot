@@ -1,12 +1,10 @@
-var TIMEOUT, TWEET_INTERVAL, Twitter, config, count, feedCallback, firstTime, getFeed, growl, growlTimeout, growlTweet, recurringCallback, showFeed, sinceId, tweetList, twitter, lastShownId, updateTweetList;
+var Twitter, config, growl, growlTweet,streamTwitter,twitter;
+var http = require('http')
+  , fs = require('fs')
 
-TWEET_INTERVAL = 10000;
-TIMEOUT = 1000;
 growl = require("growl");
 Twitter = require("ntwitter");
 config = require("./config");
-count = 1;
-tweetList = [];
 growlTimeout = false;
 
 twitter = new Twitter({
@@ -16,82 +14,85 @@ twitter = new Twitter({
   access_token_secret: config.tokenSecret
 });
 
-updateTweetList = function(tweets) {
-  var i;
-  i = tweets.length - 1;
-  while (i >= 0) {
-    tweetList.push(tweets[i]);
-    i--;
-  }
+
+
+growlTweet = function(tweet,image) {
+  var length, title;
+  //if coming tweet was retweet
+  if(tweet.retweeted_status)
+    tweet = tweet.retweeted_status;
+
+  title = tweet.user.name;
+  growl(tweet.text, {
+        title: title,
+        image: image,
+        url:"tweetbot://"+tweet.user.screen_name+"/status/"+tweet.id_str
+      });   
+};
+
+streamTwitter = function()
+{
+  twitter.stream('user', function(stream) {
+    stream.on('data', function (tweet) {
+
+      if(tweet.user)
+      {
+        if(tweet.retweeted_status)
+            tweet = tweet.retweeted_status;
+
+        getAvatar(tweet);
+      }
+
+    });
+    stream.on('end', function (response) {
+      // Handle a disconnection
+    });
+    stream.on('destroy', function (response) {
+      // Handle a 'silent' disconnection from Twitter, no end/error event fired
+    });
+  });
 }
 
-recurringCallback = function(err, data) {
-  var lastTweet;
-  if (err) {
-    throw err;
-  }
-  lastTweet = data[0];
-  if (lastTweet) {
-    sinceId = lastTweet.id;
-  }
-  updateTweetList(data);
-  showFeed();
-  return setTimeout(getFeed, TWEET_INTERVAL);
-};
 
-feedCallback = firstTime = function(err, data) {
-  var lastTweet;
-  lastTweet = data[0];
-  if (lastTweet) {
-    sinceId = lastShownId = lastTweet.id;
-    count = 20;
-    feedCallback = recurringCallback;
-  }
-  return setTimeout(getFeed, TWEET_INTERVAL);
-};
 
-getFeed = function() {
-  var obj;
-  obj = {
-    count: count
-  };
-  if (sinceId) {
-    obj.since_id = sinceId + 1;
-  }
-  return twitter.getHomeTimeline(obj, feedCallback);
-};
+getAvatar = function (tweet)
+{
+  var crypto = require('crypto');
+  var hash = crypto.createHash('md5').update(tweet.user.profile_image_url).digest("hex");
+  var filename= "/Applications/tweetbot/temp/"+hash+".png";
 
-showFeed = function() {
-  if (!growlTimeout) {
-    return growlTweet();
-  }
-};
+  fs.exists(filename, function(exists) {
+    if (exists) {
+      //avatar exist .. go growl
+      growlTweet(tweet,filename);
 
-growlTweet = function() {
-  var length, title, tweet;
-  length = tweetList.length;
-  if (length) {
-    tweet = tweetList.splice(length - 1, 1)[0];
-    if (tweet.id > lastShownId) {
-      console.log('tweet');
-      lastShownId = tweet.id;
-      title = tweet.user.screen_name;
-      growl(tweet.text, {
-        title: title,
-        image: "Tweetbot"
-      });
-      // growlTimeout = setTimeout(growlTweet, TIMEOUT);
-    // } else {
-    //   growlTweet();
+    } else {
+      //avatar exist .. go growl
+
+      var request = http.get(tweet.user.profile_image_url, function(res){
+          var imagedata = ''
+          res.setEncoding('binary');
+
+          res.on('data', function(chunk){
+              imagedata += chunk
+          })
+          res.on('end', function(){
+              fs.writeFile(filename, imagedata, 'binary', function(err){
+                  if (err) throw err
+                   growlTweet(tweet,filename);
+              })
+          })
+
+      })
     }
-    growlTweet();
-  } else {
-    return growlTimeout = false;
-  }
-};
+  });
+
+  
+}
+
 
 twitter.verifyCredentials(function(err, data) {
-  return getFeed();
+  streamTwitter();
 });
+console.log('wait for tweets .. ')
 
-console.log('Im going to wait for tweets...')

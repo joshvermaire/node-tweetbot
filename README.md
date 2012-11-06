@@ -1,9 +1,12 @@
-Supplimentary growl support for Tweetbot Alpha
-==============================================
+Supplimentary growl support for Tweetbot 
+=========================================
 
-The primary goal of this repo is to provide [growl](http://growl.info/) notifications for [Tweetbot](http://tapbots.com/tweetbot_mac/). I really like Tweetbot, but the fact that there are no notifications for my feed requires that I have both Twitter and Tweetbot open at all times.
+The primary goal of this repo is to provide [growl](http://growl.info/) notifications for [Tweetbot](http://tapbots.com/tweetbot_mac/).
+I really like Tweetbot, but the fact that there are no notifications for my feed requires that I have both Twitter and Tweetbot open at all times.
 
-While I understand that Tweetbot is in an alpha stage, this repo will be maintained until Tweetbot gets feed notifications in place.
+i tired to make it like growl notfications fro twitter with streaming, avatar and tap on notfication to view tweet.
+
+![screenshot](http://i46.tinypic.com/14vu5x0.png)
 
 ## Installation
 
@@ -11,7 +14,7 @@ While I understand that Tweetbot is in an alpha stage, this repo will be maintai
 
   Clone this repo
 
-    git@github.com:joshvermaire/node-tweetbot.git
+    git@github.com:Mo7amedfouad/node-tweetbot.git
 
   Go into the directory and start it
 
@@ -42,8 +45,4 @@ While I understand that Tweetbot is in an alpha stage, this repo will be maintai
 
 Make this into a command line app:
 
-*   Items for consideration:
-*   Time between checking for tweets (default 10s)
-*   Time between showing growl notifications (default 1s)
 *   Ask for username (default in config file)
-*   Support for Mountain Lion Notification Center

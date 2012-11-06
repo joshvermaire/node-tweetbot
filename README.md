@@ -2,6 +2,8 @@ Supplimentary growl support for Tweetbot
 =========================================
 
 The primary goal of this repo is to provide [growl](http://growl.info/) notifications for [Tweetbot](http://tapbots.com/tweetbot_mac/). I really like Tweetbot, but the fact that there are no notifications for my feed requires that I have both Twitter and Tweetbot open at all times.
+i tired to make it like growl notfications fro twitter with streaming, avatar and tap on notfication to view tweet.
+![screenshot](http://i46.tinypic.com/14vu5x0.png)
 
 ## Installation
 

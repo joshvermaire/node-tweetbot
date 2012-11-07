@@ -21,7 +21,7 @@
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mo7amedFouad/node-tweetbot"
+    "url": "https://github.com/joshvermaire/node-tweetbot"
   },
   "dependencies" : {
     "growl": "git://github.com/Mo7amedFouad/node-growl.git",

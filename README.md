@@ -14,7 +14,7 @@ i tired to make it like growl notfications fro twitter with streaming, avatar an
 
   Clone this repo
 
-    git@github.com:Mo7amedfouad/node-tweetbot.git
+    git@github.com:joshvermaire/node-tweetbot.git
 
   Go into the directory and start it
 

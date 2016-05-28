@@ -5,12 +5,11 @@
   "author": "Josh Vermaire <joshvermaire@gmail.com>",
   "description": "Supplimentary growl support for Tweetbot",
   "contributors": [
-     {
+    {
       "name": "Josh Vermaire",
       "email": "joshvermaire@gmail.com"
     },
     {
-      
       "name": "Mohamed Fouad",
       "email": "Mohamed@fouad.me"
     }
@@ -23,12 +22,12 @@
     "type": "git",
     "url": "https://github.com/joshvermaire/node-tweetbot"
   },
-  "dependencies" : {
-    "growl": "git://github.com/Mo7amedFouad/node-growl.git",
-    "ntwitter" : "0.4.1"
+  "dependencies": {
+    "growl": "^1.9.2",
+    "ntwitter": "0.5.0",
+    "twitter": "^1.3.0"
   },
-  "bundleDependencies": [
-  ],
+  "bundleDependencies": [],
   "license": "MIT",
   "engine": {
     "node": ">=0.4"

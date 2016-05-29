@@ -1,55 +1,44 @@
-var Twitter, config, growl, growlTweet,streamTwitter,twitter;
+var Twitter, config, growl, growlTweet, streamTwitter, twitter;
 var http = require('http')
   , fs = require('fs')
 
 growl = require("growl");
-Twitter = require("ntwitter");
 config = require("./config");
 growlTimeout = false;
-
+Twitter = require('twitter');
+ 
 twitter = new Twitter({
   consumer_key: config.key,
   consumer_secret: config.secret,
   access_token_key: config.tokenKey,
   access_token_secret: config.tokenSecret
 });
-
-
+ 
+console.log("start");
 
 growlTweet = function(tweet,image) {
   var length, title;
   //if coming tweet was retweet
   if(tweet.retweeted_status)
     tweet = tweet.retweeted_status;
-
-  title = tweet.user.name;
-  growl(tweet.text, {
-        title: title,
-        image: image,
-        url:"tweetbot://"+tweet.user.screen_name+"/status/"+tweet.id_str
-      });   
+    title = tweet.user.name;
+    growl(tweet.text, {
+      title: title,
+      image: image,
+      url: "tweetbot://"+tweet.user.screen_name+"/status/"+tweet.id_str
+    });   
 };
 
 streamTwitter = function()
 {
-  twitter.stream('user', function(stream) {
-    stream.on('data', function (tweet) {
-
-      if(tweet.user)
-      {
-        if(tweet.retweeted_status)
-            tweet = tweet.retweeted_status;
-
+  var stream = twitter.stream('user');
+  stream.on('data', function(tweet) {
+    if(tweet.user) {
+      console.log(tweet.text);
+      if(tweet.retweeted_status)
+        tweet = tweet.retweeted_status;
         getAvatar(tweet);
       }
-
-    });
-    stream.on('end', function (response) {
-      // Handle a disconnection
-    });
-    stream.on('destroy', function (response) {
-      // Handle a 'silent' disconnection from Twitter, no end/error event fired
-    });
   });
 }
 
@@ -85,14 +74,9 @@ getAvatar = function (tweet)
 
       })
     }
-  });
-
-  
+  });  
 }
 
-
-twitter.verifyCredentials(function(err, data) {
-  streamTwitter();
-});
-console.log('wait for tweets .. ')
+streamTwitter();
+console.log('wait for tweets .. ');
 

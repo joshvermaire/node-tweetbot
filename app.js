@@ -14,6 +14,7 @@ twitter = new Twitter({
   access_token_secret: config.tokenSecret
 });
  
+console.log("start");
 
 growlTweet = function(tweet,image) {
   var length, title;
@@ -30,7 +31,6 @@ growlTweet = function(tweet,image) {
 
 streamTwitter = function()
 {
-  console.log("start ------")
   var stream = twitter.stream('user');
   stream.on('data', function(tweet) {
     if(tweet.user) {
